@@ -4,6 +4,7 @@ import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.sql.Statement;
 import java.util.ArrayList;
 
 import data.*;
@@ -257,6 +258,46 @@ public class Dao {
 		}
 	}
 	
+	public static ArrayList<User> getUsersBySearch(String search) {
+		ArrayList<User> users = new ArrayList<>();
+		Connection conn = null;
+		
+		try {
+			conn = Connections.getDevConnection();
+		} catch (Exception e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+			return users;
+		}
+		
+		try {
+			String sql = "SELECT userID, username FROM users WHERE username LIKE ?;";
+			PreparedStatement pstmt = conn.prepareStatement(sql);
+			pstmt.setString(1, "%" + search + "%");
+			ResultSet result = pstmt.executeQuery();
+			
+			while(result.next()) {
+				User current_user = new User();
+				current_user.setUserID(result.getInt(1));
+				current_user.setUsername(result.getString(2));
+				users.add(current_user);
+			}
+			
+			return users;
+			
+		} catch (SQLException e) {
+			e.printStackTrace();
+			return users;
+		} finally {
+			try {
+				if (conn != null)
+					conn.close();
+			} catch (Exception e) {
+				e.printStackTrace();
+			}
+		}
+	}
+	
 	public static Note getNote(int noteID) {
 		Connection conn = null;
 		Note note = new Note();
@@ -330,6 +371,133 @@ public class Dao {
 		} catch (SQLException e) {
 			e.printStackTrace();
 			return false;
+		} finally {
+			try {
+				if (conn != null)
+					conn.close();
+			} catch (Exception e) {
+				e.printStackTrace();
+			}
+		}
+	}
+	
+	public static Share shareUserNote(int userID, int noteID) {
+		Connection conn = null;
+		Share share = new Share();
+		
+		try {
+			conn = Connections.getDevConnection();
+		} catch (Exception e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+			return share;
+		}
+		
+		try {
+			String sql = "INSERT INTO shares (distributorID, noteID) VALUES (?, ?);";
+			PreparedStatement pstmt = conn.prepareStatement(sql, Statement.RETURN_GENERATED_KEYS);
+			pstmt.setInt(1, userID);
+			pstmt.setInt(2, noteID);
+			int resultCount = pstmt.executeUpdate();
+			
+			if (resultCount > 0) {
+				ResultSet generatedKeys = pstmt.getGeneratedKeys();
+				if(generatedKeys.next()) {
+					share.setShareID(generatedKeys.getInt(1));
+				}
+				return share;
+			} else {
+				return share;
+			}
+			
+		} catch (SQLException e) {
+			e.printStackTrace();
+			return share;
+		} finally {
+			try {
+				if (conn != null)
+					conn.close();
+			} catch (Exception e) {
+				e.printStackTrace();
+			}
+		}
+	}
+	
+	public static boolean shareToUser(int shareID, int userID) {
+		Connection conn = null;
+		
+		try {
+			conn = Connections.getDevConnection();
+		} catch (Exception e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+			return false;
+		}
+		
+		try {
+			String sql = "INSERT INTO sharedTo (shareID, userID) VALUES (?, ?);";
+			PreparedStatement pstmt = conn.prepareStatement(sql);
+			pstmt.setInt(1, shareID);
+			pstmt.setInt(2, userID);
+			int resultCount = pstmt.executeUpdate();
+			
+			if (resultCount > 0) {
+				return true;
+			} else {
+				return false;
+			}
+			
+		} catch (SQLException e) {
+			e.printStackTrace();
+			return false;
+		} finally {
+			try {
+				if (conn != null)
+					conn.close();
+			} catch (Exception e) {
+				e.printStackTrace();
+			}
+		}
+	}
+	
+	public static Note updateNote(int noteID, String title, String content, String date, boolean notePublic, int userID) {
+		Connection conn = null;
+		Note note = new Note();
+		
+		try {
+			conn = Connections.getDevConnection();
+		} catch (Exception e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+			return note;
+		}
+		
+		try {
+			String sql = "UPDATE notes SET title = ?, content = ?, date = ?, public = ? WHERE noteID = ? AND userID = ?;";
+			PreparedStatement pstmt = conn.prepareStatement(sql);
+			pstmt.setString(1, title);
+			pstmt.setString(2, content);
+			pstmt.setString(3, date);
+			pstmt.setBoolean(4, notePublic);
+			pstmt.setInt(5, noteID);
+			pstmt.setInt(6, userID);
+			int resultCount = pstmt.executeUpdate();
+			
+			if (resultCount > 0) {
+				note.setNoteID(noteID);
+				note.setTitle(title);
+				note.setContent(content);
+				note.setDate(date);
+				note.setNotePublic(notePublic);
+				note.setUserID(userID);
+				return note;
+			} else {
+				return note;
+			}
+			
+		} catch (SQLException e) {
+			e.printStackTrace();
+			return note;
 		} finally {
 			try {
 				if (conn != null)
