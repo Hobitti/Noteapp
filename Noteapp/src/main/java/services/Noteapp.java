@@ -68,6 +68,14 @@ public class Noteapp {
 	}
 	
 	@POST
+	@Path("/getusersbysearch")
+	@Produces(MediaType.APPLICATION_JSON)
+	@Consumes(MediaType.APPLICATION_JSON)
+	public ArrayList<User> getUsersBySearch(User u) {
+		return Dao.getUsersBySearch(u.getUsername());
+	}
+	
+	@POST
 	@Path("/getnote")
 	@Produces(MediaType.APPLICATION_JSON)
 	@Consumes(MediaType.APPLICATION_JSON)
@@ -81,5 +89,29 @@ public class Noteapp {
 	@Consumes(MediaType.APPLICATION_JSON)
 	public boolean addNote(Note n) {
 		return Dao.addNewNote(n.getTitle(), n.getContent(), n.getDate(), n.isNotePublic(), n.getUserID());
+	}
+	
+	@POST
+	@Path("/sharenote")
+	@Produces(MediaType.APPLICATION_JSON)
+	@Consumes(MediaType.APPLICATION_JSON)
+	public Share shareNote(Share s) {
+		return Dao.shareUserNote(s.getDistributorID(), s.getNoteID());
+	}
+	
+	@POST
+	@Path("/sharetouser")
+	@Produces(MediaType.APPLICATION_JSON)
+	@Consumes(MediaType.APPLICATION_JSON)
+	public boolean shareToUser(ShareTo st) {
+		return Dao.shareToUser(st.getShareID(), st.getUserID());
+	}
+	
+	@POST
+	@Path("/editnote")
+	@Produces(MediaType.APPLICATION_JSON)
+	@Consumes(MediaType.APPLICATION_JSON)
+	public Note editNote(Note n) {
+		return Dao.updateNote(n.getNoteID(), n.getTitle(), n.getContent(), n.getDate(), n.isNotePublic(), n.getUserID());
 	}
 }
