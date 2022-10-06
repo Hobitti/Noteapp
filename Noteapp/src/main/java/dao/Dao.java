@@ -130,6 +130,128 @@ public class Dao {
 		}
 	}
 	
+	public static ArrayList<User> getUserNoteSharedUsers(int userID, int noteID) {
+		ArrayList<User> user_note_shared_users = new ArrayList<>();
+		Connection conn = null;
+		
+		try {
+			conn = Connections.getDevConnection();
+		} catch (Exception e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+			return user_note_shared_users;
+		}
+		
+		try {
+			String sql = "SELECT users.userID, users.username FROM shares INNER JOIN sharedTo ON shares.shareID = sharedTo.shareID INNER JOIN users ON sharedTo.userID = users.userID WHERE shares.distributorID = ? AND shares.noteID = ?;";
+			PreparedStatement pstmt = conn.prepareStatement(sql);
+			pstmt.setInt(1, userID);
+			pstmt.setInt(2, noteID);
+			ResultSet result = pstmt.executeQuery();
+			
+			while(result.next()) {
+				User current_user = new User();
+				current_user.setUserID(result.getInt(1));
+				current_user.setUsername(result.getString(2));
+				user_note_shared_users.add(current_user);
+			}
+			
+			return user_note_shared_users;
+			
+		} catch (SQLException e) {
+			e.printStackTrace();
+			return user_note_shared_users;
+		} finally {
+			try {
+				if (conn != null)
+					conn.close();
+			} catch (Exception e) {
+				e.printStackTrace();
+			}
+		}
+	}
+	
+	public static DetailedNote getNoteDetails(int noteID, int userID) {
+		DetailedNote detailed_note = new DetailedNote();
+		Connection conn = null;
+		
+		try {
+			conn = Connections.getDevConnection();
+		} catch (Exception e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+			return detailed_note;
+		}
+		
+		try {
+			Note note = new Note();
+			note = getNote(noteID);
+			
+			Share share = new Share();
+			share = getShare(userID, noteID);
+			
+			ArrayList<User> shared_to = new ArrayList<>();
+			shared_to = getUserNoteSharedUsers(userID, noteID);
+			
+			detailed_note.setNote(note);
+			detailed_note.setShare(share);
+			detailed_note.setSharedTo(shared_to);
+			
+			return detailed_note;
+			
+		} catch (Exception e) {
+			e.printStackTrace();
+			return detailed_note;
+		} finally {
+			try {
+				if (conn != null)
+					conn.close();
+			} catch (Exception e) {
+				e.printStackTrace();
+			}
+		}
+	}
+	
+	public static Share getShare(int userID, int noteID) {
+		Share share = new Share();
+		Connection conn = null;
+		
+		try {
+			conn = Connections.getDevConnection();
+		} catch (Exception e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+			return share;
+		}
+		
+		try {
+			String sql = "SELECT * FROM shares WHERE distributorID = ? AND noteID = ?;";
+			PreparedStatement pstmt = conn.prepareStatement(sql);
+			pstmt.setInt(1, userID);
+			pstmt.setInt(2, noteID);
+			ResultSet result = pstmt.executeQuery();
+			
+			if(result.next()) {
+				share.setShareID(result.getInt(1));
+				share.setDistributorID(result.getInt(2));
+				share.setNoteID(result.getInt(3));
+			}
+			
+			return share;
+			
+		} catch (SQLException e) {
+			e.printStackTrace();
+			return share;
+		} finally {
+			try {
+				if (conn != null)
+					conn.close();
+			} catch (Exception e) {
+				e.printStackTrace();
+			}
+		}
+	}
+	
 	public static ArrayList<Note> getNotesSharedToUser(int userID) {
 		ArrayList<Note> notes_shared_to_user = new ArrayList<>();
 		Connection conn = null;
@@ -323,11 +445,10 @@ public class Dao {
 				note.setDate(result.getString(4));
 				note.setNotePublic(result.getBoolean(5));
 				note.setUserID(result.getInt(6));
-				return note;
-			} else {
-				return note;
 			}
 			
+			return note;
+
 		} catch (SQLException e) {
 			e.printStackTrace();
 			return note;
@@ -498,6 +619,117 @@ public class Dao {
 		} catch (SQLException e) {
 			e.printStackTrace();
 			return note;
+		} finally {
+			try {
+				if (conn != null)
+					conn.close();
+			} catch (Exception e) {
+				e.printStackTrace();
+			}
+		}
+	}
+	
+	public static boolean deleteShareTo(int shareID, int userID) {
+		Connection conn = null;
+		
+		try {
+			conn = Connections.getDevConnection();
+		} catch (Exception e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+			return false;
+		}
+		
+		try {
+			String sql = "DELETE FROM sharedTo WHERE shareID = ? AND userID = ?;";
+			PreparedStatement pstmt = conn.prepareStatement(sql);
+			pstmt.setInt(1, shareID);
+			pstmt.setInt(2, userID);
+			int resultCount = pstmt.executeUpdate();
+			
+			if (resultCount > 0) {
+				return true;
+			} else {
+				return false;
+			}
+			
+		} catch (SQLException e) {
+			e.printStackTrace();
+			return false;
+		} finally {
+			try {
+				if (conn != null)
+					conn.close();
+			} catch (Exception e) {
+				e.printStackTrace();
+			}
+		}
+	}
+	
+	public static boolean deleteShare(int userID, int noteID) {
+		Connection conn = null;
+		
+		try {
+			conn = Connections.getDevConnection();
+		} catch (Exception e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+			return false;
+		}
+		
+		try {
+			String sql = "DELETE FROM shares WHERE distributorID = ? AND noteID = ?;";
+			PreparedStatement pstmt = conn.prepareStatement(sql);
+			pstmt.setInt(1, userID);
+			pstmt.setInt(2, noteID);
+			int resultCount = pstmt.executeUpdate();
+			
+			if (resultCount > 0) {
+				return true;
+			} else {
+				return false;
+			}
+			
+		} catch (SQLException e) {
+			e.printStackTrace();
+			return false;
+		} finally {
+			try {
+				if (conn != null)
+					conn.close();
+			} catch (Exception e) {
+				e.printStackTrace();
+			}
+		}
+	}
+	
+	public static boolean deleteNote(int noteID, int userID) {
+		Connection conn = null;
+		
+		try {
+			conn = Connections.getDevConnection();
+		} catch (Exception e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+			return false;
+		}
+		
+		try {
+			String sql = "DELETE FROM notes WHERE noteID = ? AND userID = ?;";
+			PreparedStatement pstmt = conn.prepareStatement(sql);
+			pstmt.setInt(1, noteID);
+			pstmt.setInt(2, userID);
+			int resultCount = pstmt.executeUpdate();
+			
+			if (resultCount > 0) {
+				return true;
+			} else {
+				return false;
+			}
+			
+		} catch (SQLException e) {
+			e.printStackTrace();
+			return false;
 		} finally {
 			try {
 				if (conn != null)
