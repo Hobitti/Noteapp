@@ -7,7 +7,9 @@ import java.sql.SQLException;
 import java.util.ArrayList;
 
 import javax.ws.rs.Consumes;
+import javax.ws.rs.DELETE;
 import javax.ws.rs.POST;
+import javax.ws.rs.PUT;
 import javax.ws.rs.Path;
 import javax.ws.rs.Produces;
 import javax.ws.rs.core.MediaType;
@@ -41,6 +43,14 @@ public class Noteapp {
 	@Consumes(MediaType.APPLICATION_JSON)
 	public ArrayList<Note> getUserNotes(User u) {
 		return Dao.getUserNotes(u.getUserID());
+	}
+	
+	@POST
+	@Path("/getusernotesharedusers")
+	@Produces(MediaType.APPLICATION_JSON)
+	@Consumes(MediaType.APPLICATION_JSON)
+	public ArrayList<User> getUserNoteSharedUsers(Share s) {
+		return Dao.getUserNoteSharedUsers(s.getDistributorID(), s.getNoteID());
 	}
 	
 	@POST
@@ -107,11 +117,43 @@ public class Noteapp {
 		return Dao.shareToUser(st.getShareID(), st.getUserID());
 	}
 	
-	@POST
+	@PUT
 	@Path("/editnote")
 	@Produces(MediaType.APPLICATION_JSON)
 	@Consumes(MediaType.APPLICATION_JSON)
 	public Note editNote(Note n) {
 		return Dao.updateNote(n.getNoteID(), n.getTitle(), n.getContent(), n.getDate(), n.isNotePublic(), n.getUserID());
+	}
+	
+	@DELETE
+	@Path("/removeshareto")
+	@Produces(MediaType.APPLICATION_JSON)
+	@Consumes(MediaType.APPLICATION_JSON)
+	public boolean removeShareTo(ShareTo st) {
+		return Dao.deleteShareTo(st.getShareID(), st.getUserID());
+	}
+	
+	@DELETE
+	@Path("/removeshare")
+	@Produces(MediaType.APPLICATION_JSON)
+	@Consumes(MediaType.APPLICATION_JSON)
+	public boolean removeShare(Share s) {
+		return Dao.deleteShare(s.getDistributorID(), s.getNoteID());
+	}
+	
+	@DELETE
+	@Path("/removenote")
+	@Produces(MediaType.APPLICATION_JSON)
+	@Consumes(MediaType.APPLICATION_JSON)
+	public boolean removeNote(Note n) {
+		return Dao.deleteNote(n.getNoteID(), n.getUserID());
+	}
+	
+	@POST
+	@Path("/getnotedetails")
+	@Produces(MediaType.APPLICATION_JSON)
+	@Consumes(MediaType.APPLICATION_JSON)
+	public DetailedNote getNoteDetails(Note n) {
+		return Dao.getNoteDetails(n.getNoteID(), n.getUserID());
 	}
 }
