@@ -1,21 +1,30 @@
-import React, {useState} from 'react';
+import React, {useState, useEffect} from 'react';
 import {Text, View, TextInput, StyleSheet, Image} from 'react-native';
 import CustomButton from './CustomButton';
+import CustomTextInput from './CustomTextInput';
 import Icon from 'react-native-vector-icons/FontAwesome5';
+import Toast from 'react-native-toast-message';
 
-const SignInScreen = (props) => {
+const SignInScreen = props => {
   const [username, setUsername] = useState('');
   const [password, setPassword] = useState('');
   const [passHidden, setPassHidden] = useState(true);
+  const [nameError, setNameError] = useState('');
+  const [passError, setPassError] = useState('');
 
-  const usernameHandler = text => {
-    setUsername(text);
-  };
+  const clearInputsAndErrors = () => {
+    setUsername('');
+    setPassword('');
+    setNameError('');
+    setPassError('');
+  }
 
-  const passwordHandler = text => {
-    setPassword(text);
-  };
-
+  useEffect(() => {
+    if (props.route.params?.username) {
+      setUsername(props.route.params.username);
+    }
+  }, [props.route.params?.username]);
+  
   const checkLogin = async () => {
     try {
       let response = await fetch(
@@ -31,13 +40,35 @@ const SignInScreen = (props) => {
 
       let json = await response.json();
       console.log(json);
+      if (json.userID == 0 || json.userID == null) {
+        setNameError('Incorrect credentials');
+        setPassError('Incorrect credentials');
+        Toast.show({
+          type: 'error',
+          text1: 'Incorrect login credentials',
+          text2: 'Check your login details and try again',
+        });
+      } else {
+        setNameError('');
+        setPassError('');
+        Toast.show({
+          type: 'success',
+          text1: 'Login succesful',
+          text2: 'Welcome ' + json.username + '!',
+        });
+      }
     } catch (error) {
       console.log(error);
+      Toast.show({
+        type: 'error',
+        text1: 'Login failed',
+        text2: 'Server error. Try again later',
+      });
     }
   };
 
   return (
-    <View style={styles.mainContainer}>
+    <View style={styles.componentContainer}>
       <View style={styles.contentContainer}>
         <View style={styles.logo}>
           <Image source={require('../assets/images/logo.png')} />
@@ -50,21 +81,30 @@ const SignInScreen = (props) => {
 
           <View style={styles.formInput}>
             <Text style={styles.inputTitle}>Username</Text>
-            <TextInput
-              style={styles.textInput}
+            <CustomTextInput
+              value={username}
               placeholder="Enter your username"
-              onChangeText={usernameHandler}
+              onChangeText={text => {
+                setUsername(text);
+              }}
+              maxLength={30}
+              error={nameError}
             />
+            {!!nameError && <Text style={styles.error}>{nameError}</Text>}
           </View>
 
           <View style={styles.formInput}>
             <Text style={styles.inputTitle}>Password</Text>
             <View style={styles.passwordInput}>
-              <TextInput
-                style={styles.textInput}
-                placeholder="Enter your password"
-                onChangeText={passwordHandler}
+              <CustomTextInput
+                value={password}
+                placeholder="Enter your username"
                 secureTextEntry={passHidden}
+                onChangeText={text => {
+                  setPassword(text);
+                }}
+                maxLength={40}
+                error={passError}
               />
               <View style={styles.iconInInput}>
                 <Icon
@@ -79,6 +119,7 @@ const SignInScreen = (props) => {
                 />
               </View>
             </View>
+            {!!passError && <Text style={styles.error}>{passError}</Text>}
           </View>
 
           <View style={styles.formButtons}>
@@ -89,7 +130,7 @@ const SignInScreen = (props) => {
               <CustomButton
                 title="sign up"
                 type="secondary"
-                onPress={() => props.navigation.navigate('SignUpScreen')}
+                onPress={() => {clearInputsAndErrors(); props.navigation.navigate('SignUpScreen')}}
               />
             </View>
           </View>
@@ -100,14 +141,14 @@ const SignInScreen = (props) => {
 };
 
 const styles = StyleSheet.create({
-  mainContainer: {
+  componentContainer: {
     flex: 1,
     backgroundColor: 'rgba(248, 52, 108, 0.7)',
   },
   contentContainer: {
     flex: 1,
     backgroundColor: '#fff',
-    top: 110,
+    top: 80,
     borderTopLeftRadius: 40,
     borderTopRightRadius: 40,
     alignItems: 'center',
@@ -117,11 +158,12 @@ const styles = StyleSheet.create({
   },
   form: {
     flex: 1,
-    width: 220,
+    width: 230,
+    bottom: 20
   },
   formTitle: {
     alignItems: 'center',
-    bottom: 30,
+    bottom: 25,
   },
   header: {
     fontFamily: 'RobotoCondensed-Bold',
@@ -135,15 +177,8 @@ const styles = StyleSheet.create({
     fontFamily: 'RobotoCondensed-Regular',
     color: '#000',
     marginLeft: 10,
+    marginBottom: 2,
     fontSize: 16,
-  },
-  textInput: {
-    borderColor: 'rgba(49, 198, 232, 0.5)',
-    borderWidth: 2,
-    borderRadius: 15,
-    paddingLeft: 10,
-    fontFamily: 'RobotoCondensed-Regular',
-    fontSize: 14,
   },
   formButtons: {
     marginTop: 20,
@@ -163,6 +198,11 @@ const styles = StyleSheet.create({
     right: 8,
     bottom: 0,
     justifyContent: 'center',
+  },
+  error: {
+    fontSize: 14,
+    color: '#F8346C',
+    marginLeft: 10,
   },
 });
 
