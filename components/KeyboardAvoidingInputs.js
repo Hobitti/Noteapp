@@ -14,7 +14,9 @@ import {
 const KeyboardAvoidingInputs = ({children}) => {
   return (
     <KeyboardAvoidingView style={{flex: 1}}>
-      <ScrollView contentContainerStyle={{flexGrow: 1}}>
+      <ScrollView
+        contentContainerStyle={{flexGrow: 1}}
+        keyboardShouldPersistTaps="always">
         <TouchableWithoutFeedback onPress={Keyboard.dismiss}>
           {children}
         </TouchableWithoutFeedback>
