@@ -1,4 +1,4 @@
-import React, {useState} from 'react';
+import React from 'react';
 import {StyleSheet, View} from 'react-native';
 import {NavigationContainer} from '@react-navigation/native';
 import {createNativeStackNavigator} from '@react-navigation/native-stack';
@@ -8,8 +8,8 @@ import Toast, {BaseToast, ErrorToast} from 'react-native-toast-message';
 
 import SignUpScreen from './components/SignUpScreen';
 import SignInScreen from './components/SignInScreen';
-import HideKeyboard from './components/HideKeyboard';
 
+// Customized toasts
 const toastConfig = {
   success: props => (
     <BaseToast
@@ -60,25 +60,23 @@ const Stack = createNativeStackNavigator();
 
 const App = () => {
   return (
-    <HideKeyboard>
-      <View style={styles.mainContainer}>
-        <NavigationContainer>
-          <Stack.Navigator initialRouteName="SignInScreen">
-            <Stack.Screen
-              name="SignInScreen"
-              component={SignInScreen}
-              options={{headerShown: false}}
-            />
-            <Stack.Screen
-              name="SignUpScreen"
-              component={SignUpScreen}
-              options={{headerShown: false}}
-            />
-          </Stack.Navigator>
-        </NavigationContainer>
-        <Toast config={toastConfig} position="bottom" bottomOffset={20} />
-      </View>
-    </HideKeyboard>
+    <View style={styles.mainContainer}>
+      <NavigationContainer>
+        <Stack.Navigator initialRouteName="SignInScreen">
+          <Stack.Screen
+            name="SignInScreen"
+            component={SignInScreen}
+            options={{headerShown: false}}
+          />
+          <Stack.Screen
+            name="SignUpScreen"
+            component={SignUpScreen}
+            options={{headerShown: false}}
+          />
+        </Stack.Navigator>
+      </NavigationContainer>
+      <Toast config={toastConfig} position="bottom" bottomOffset={20} />
+    </View>
   );
 };
 
