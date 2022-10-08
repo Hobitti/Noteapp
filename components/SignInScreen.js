@@ -14,6 +14,8 @@ const SignInScreen = props => {
   const [nameError, setNameError] = useState('');
   const [passError, setPassError] = useState('');
 
+  let passwordInputRef = createRef();
+
   const clearInputsAndErrors = () => {
     setUsername('');
     setPassword('');
@@ -26,8 +28,6 @@ const SignInScreen = props => {
       setUsername(props.route.params.username);
     }
   }, [props.route.params?.username]);
-
-  let passwordInputRef = createRef();
   
   const checkLogin = async () => {
     try {
@@ -103,8 +103,7 @@ const SignInScreen = props => {
             <Text style={styles.inputTitle}>Password</Text>
             <View style={styles.passwordInput}>
 
-              <View 
-                            onTouchEnd={(e) => e.stopPropagation()}>
+              <View onTouchEnd={(e) => e.stopPropagation()}>
                 <CustomTextInput
                   value={password}
                   placeholder="Enter your username"
