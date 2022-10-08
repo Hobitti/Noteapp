@@ -13,7 +13,7 @@ const CustomTextInput = forwardRef((props, ref) => {
         styles.textInput,
         props.style,
         isFocused && {borderColor: 'rgba(49, 198, 232, 1)', borderRadius: 5},
-        props.error && {borderColor: '#F8346C'}
+        props.error && {borderColor: '#F8346C'},
       ]}
       onBlur={() => setIsFocused(false)}
       onFocus={() => setIsFocused(true)}
