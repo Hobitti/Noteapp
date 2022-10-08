@@ -8,37 +8,50 @@ import Toast, {BaseToast, ErrorToast} from 'react-native-toast-message';
 
 import SignUpScreen from './components/SignUpScreen';
 import SignInScreen from './components/SignInScreen';
+import HideKeyboard from './components/HideKeyboard';
 
 const toastConfig = {
   success: props => (
     <BaseToast
       {...props}
-      style = {{elevation: 10, borderLeftColor: '#31E89F'}}
-      contentContainerStyle = {{paddingHorizontal: 15}}
-      text1Style = {{
+      style={{elevation: 10, borderLeftColor: '#31E89F'}}
+      contentContainerStyle={{paddingHorizontal: 15}}
+      text1Style={{
         fontSize: 14,
-        fontFamily: "RobotoCondensed-Bold"
+        fontFamily: 'RobotoCondensed-Bold',
       }}
-      text2Style = {{
+      text2Style={{
         fontSize: 13,
-        fontFamily: "RobotoCondensed-Regular"
+        fontFamily: 'RobotoCondensed-Regular',
       }}
-      renderTrailingIcon = {() => <Icon style={styles.toastIcon} name="close" onPress={() => props.hide()}/>}
+      renderTrailingIcon={() => (
+        <Icon
+          style={styles.toastIcon}
+          name="close"
+          onPress={() => props.hide()}
+        />
+      )}
     />
   ),
   error: props => (
     <ErrorToast
       {...props}
-      style = {{elevation: 10, borderLeftColor: "#F8346C"}}
-      text1Style = {{
+      style={{elevation: 10, borderLeftColor: '#F8346C'}}
+      text1Style={{
         fontSize: 14,
-        fontFamily: "RobotoCondensed-Bold"
+        fontFamily: 'RobotoCondensed-Bold',
       }}
-      text2Style = {{
+      text2Style={{
         fontSize: 13,
-        fontFamily: "RobotoCondensed-Regular"
+        fontFamily: 'RobotoCondensed-Regular',
       }}
-      renderTrailingIcon = {() => <Icon style={styles.toastIcon} name="close" onPress={() => props.hide()}/>}
+      renderTrailingIcon={() => (
+        <Icon
+          style={styles.toastIcon}
+          name="close"
+          onPress={() => props.hide()}
+        />
+      )}
     />
   ),
 };
@@ -47,23 +60,25 @@ const Stack = createNativeStackNavigator();
 
 const App = () => {
   return (
-    <View style={styles.mainContainer}>
-      <NavigationContainer>
-        <Stack.Navigator initialRouteName="SignInScreen">
-          <Stack.Screen
-            name="SignInScreen"
-            component={SignInScreen}
-            options={{headerShown: false}}
-          />
-          <Stack.Screen
-            name="SignUpScreen"
-            component={SignUpScreen}
-            options={{headerShown: false}}
-          />
-        </Stack.Navigator>
-      </NavigationContainer>
-      <Toast config={toastConfig} position="bottom" bottomOffset={20} />
-    </View>
+    <HideKeyboard>
+      <View style={styles.mainContainer}>
+        <NavigationContainer>
+          <Stack.Navigator initialRouteName="SignInScreen">
+            <Stack.Screen
+              name="SignInScreen"
+              component={SignInScreen}
+              options={{headerShown: false}}
+            />
+            <Stack.Screen
+              name="SignUpScreen"
+              component={SignUpScreen}
+              options={{headerShown: false}}
+            />
+          </Stack.Navigator>
+        </NavigationContainer>
+        <Toast config={toastConfig} position="bottom" bottomOffset={20} />
+      </View>
+    </HideKeyboard>
   );
 };
 
@@ -74,8 +89,8 @@ const styles = StyleSheet.create({
   toastIcon: {
     fontSize: 24,
     alignSelf: 'center',
-    marginRight: 10
-  }
+    marginRight: 10,
+  },
 });
 
 export default App;
