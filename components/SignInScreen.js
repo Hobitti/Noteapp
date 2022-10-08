@@ -1,9 +1,11 @@
-import React, {useState, useEffect} from 'react';
-import {Text, View, TextInput, StyleSheet, Image} from 'react-native';
-import CustomButton from './CustomButton';
-import CustomTextInput from './CustomTextInput';
+import React, {useState, useEffect, createRef} from 'react';
+import {Text, View, StyleSheet, Image} from 'react-native';
+
 import Icon from 'react-native-vector-icons/FontAwesome5';
 import Toast from 'react-native-toast-message';
+
+import CustomButton from './CustomButton';
+import CustomTextInput from './CustomTextInput';
 
 const SignInScreen = props => {
   const [username, setUsername] = useState('');
@@ -24,6 +26,8 @@ const SignInScreen = props => {
       setUsername(props.route.params.username);
     }
   }, [props.route.params?.username]);
+
+  let passwordInputRef = createRef();
   
   const checkLogin = async () => {
     try {
@@ -89,6 +93,8 @@ const SignInScreen = props => {
               }}
               maxLength={30}
               error={nameError}
+              onSubmitEditing={() => passwordInputRef.current.focus()}
+              blurOnSubmit={false}
             />
             {!!nameError && <Text style={styles.error}>{nameError}</Text>}
           </View>
@@ -96,16 +102,21 @@ const SignInScreen = props => {
           <View style={styles.formInput}>
             <Text style={styles.inputTitle}>Password</Text>
             <View style={styles.passwordInput}>
-              <CustomTextInput
-                value={password}
-                placeholder="Enter your username"
-                secureTextEntry={passHidden}
-                onChangeText={text => {
-                  setPassword(text);
-                }}
-                maxLength={40}
-                error={passError}
-              />
+
+              <View 
+                            onTouchEnd={(e) => e.stopPropagation()}>
+                <CustomTextInput
+                  value={password}
+                  placeholder="Enter your username"
+                  secureTextEntry={passHidden}
+                  onChangeText={text => {
+                    setPassword(text);
+                  }}
+                  ref={passwordInputRef}
+                  maxLength={40}
+                  error={passError}
+                />
+              </View>
               <View style={styles.iconInInput}>
                 <Icon
                   onPress={() => setPassHidden(!passHidden)}
