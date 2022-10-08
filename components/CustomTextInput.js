@@ -1,7 +1,7 @@
-import React, {useState} from 'react';
+import React, {useState, forwardRef} from 'react';
 import {TextInput, StyleSheet} from 'react-native';
 
-const CustomTextInput = props => {
+const CustomTextInput = forwardRef((props, ref) => {
   const [isFocused, setIsFocused] = useState(false);
 
   return (
@@ -15,9 +15,10 @@ const CustomTextInput = props => {
       ]}
       onBlur={() => setIsFocused(false)}
       onFocus={() => setIsFocused(true)}
+      ref={ref}
     />
   );
-};
+});
 
 const styles = StyleSheet.create({
   textInput: {
