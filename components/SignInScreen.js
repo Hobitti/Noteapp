@@ -1,11 +1,17 @@
 import React, {useState, useEffect, createRef} from 'react';
-import {Text, View, StyleSheet, Image} from 'react-native';
+import {
+  Text,
+  View,
+  StyleSheet,
+  Image
+} from 'react-native';
 
 import Icon from 'react-native-vector-icons/FontAwesome5';
 import Toast from 'react-native-toast-message';
 
 import CustomButton from './CustomButton';
 import CustomTextInput from './CustomTextInput';
+import KeyboardAvoidingInputs from './KeyboardAvoidingInputs';
 
 const SignInScreen = props => {
   const [username, setUsername] = useState('');
@@ -19,16 +25,17 @@ const SignInScreen = props => {
   const clearInputsAndErrors = () => {
     setUsername('');
     setPassword('');
+    setPassHidden(true);
     setNameError('');
     setPassError('');
-  }
+  };
 
   useEffect(() => {
     if (props.route.params?.username) {
       setUsername(props.route.params.username);
     }
   }, [props.route.params?.username]);
-  
+
   const checkLogin = async () => {
     try {
       let response = await fetch(
@@ -72,38 +79,34 @@ const SignInScreen = props => {
   };
 
   return (
-    <View style={styles.componentContainer}>
-      <View style={styles.contentContainer}>
-        <View style={styles.logo}>
-          <Image source={require('../assets/images/logo.png')} />
-        </View>
-
-        <View style={styles.form}>
-          <View style={styles.formTitle}>
-            <Text style={styles.header}>Sign In</Text>
+    <KeyboardAvoidingInputs>
+      <View style={styles.componentContainer}>
+        <View style={styles.contentContainer}>
+          <View style={styles.logo}>
+            <Image source={require('../assets/images/logo.png')} />
           </View>
-
-          <View style={styles.formInput}>
-            <Text style={styles.inputTitle}>Username</Text>
-            <CustomTextInput
-              value={username}
-              placeholder="Enter your username"
-              onChangeText={text => {
-                setUsername(text);
-              }}
-              maxLength={30}
-              error={nameError}
-              onSubmitEditing={() => passwordInputRef.current.focus()}
-              blurOnSubmit={false}
-            />
-            {!!nameError && <Text style={styles.error}>{nameError}</Text>}
-          </View>
-
-          <View style={styles.formInput}>
-            <Text style={styles.inputTitle}>Password</Text>
-            <View style={styles.passwordInput}>
-
-              <View onTouchEnd={(e) => e.stopPropagation()}>
+          <View style={styles.form}>
+            <View style={styles.formTitle}>
+              <Text style={styles.header}>Sign In</Text>
+            </View>
+            <View style={styles.formInput}>
+              <Text style={styles.inputTitle}>Username</Text>
+              <CustomTextInput
+                value={username}
+                placeholder="Enter your username"
+                onChangeText={text => {
+                  setUsername(text);
+                }}
+                maxLength={30}
+                error={nameError}
+                onSubmitEditing={() => passwordInputRef.current.focus()}
+                blurOnSubmit={false}
+              />
+              {!!nameError && <Text style={styles.error}>{nameError}</Text>}
+            </View>
+            <View style={styles.formInput}>
+              <Text style={styles.inputTitle}>Password</Text>
+              <View style={styles.passwordInput}>
                 <CustomTextInput
                   value={password}
                   placeholder="Enter your username"
@@ -115,38 +118,40 @@ const SignInScreen = props => {
                   maxLength={40}
                   error={passError}
                 />
+                <View style={styles.iconInInput}>
+                  <Icon
+                    onPress={() => setPassHidden(!passHidden)}
+                    name={passHidden ? 'eye' : 'eye-slash'}
+                    style={styles.icon}
+                    color={
+                      passHidden
+                        ? 'rgba(49, 198, 232, 1)'
+                        : 'rgba(49, 198, 232, 1)'
+                    }
+                  />
+                </View>
               </View>
-              <View style={styles.iconInInput}>
-                <Icon
-                  onPress={() => setPassHidden(!passHidden)}
-                  name={passHidden ? 'eye' : 'eye-slash'}
-                  style={styles.icon}
-                  color={
-                    passHidden
-                      ? 'rgba(49, 198, 232, 1)'
-                      : 'rgba(49, 198, 232, 1)'
-                  }
+              {!!passError && <Text style={styles.error}>{passError}</Text>}
+            </View>
+            <View style={styles.formButtons}>
+              <View style={styles.formButton}>
+                <CustomButton title="login" type="main" onPress={checkLogin} />
+              </View>
+              <View style={styles.formButton}>
+                <CustomButton
+                  title="sign up"
+                  type="secondary"
+                  onPress={() => {
+                    clearInputsAndErrors();
+                    props.navigation.navigate('SignUpScreen');
+                  }}
                 />
               </View>
-            </View>
-            {!!passError && <Text style={styles.error}>{passError}</Text>}
-          </View>
-
-          <View style={styles.formButtons}>
-            <View style={styles.formButton}>
-              <CustomButton title="login" type="main" onPress={checkLogin} />
-            </View>
-            <View style={styles.formButton}>
-              <CustomButton
-                title="sign up"
-                type="secondary"
-                onPress={() => {clearInputsAndErrors(); props.navigation.navigate('SignUpScreen')}}
-              />
             </View>
           </View>
         </View>
       </View>
-    </View>
+    </KeyboardAvoidingInputs>
   );
 };
 
@@ -169,7 +174,7 @@ const styles = StyleSheet.create({
   form: {
     flex: 1,
     width: 230,
-    bottom: 20
+    bottom: 20,
   },
   formTitle: {
     alignItems: 'center',
