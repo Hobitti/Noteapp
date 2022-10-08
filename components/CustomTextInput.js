@@ -1,6 +1,8 @@
 import React, {useState, forwardRef} from 'react';
 import {TextInput, StyleSheet} from 'react-native';
 
+// Reference forwading for automatic focus of next input onSubmitEditing
+// The reference has to be forwarder, because custom components don't use refs on default
 const CustomTextInput = forwardRef((props, ref) => {
   const [isFocused, setIsFocused] = useState(false);
 
