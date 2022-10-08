@@ -1,10 +1,5 @@
 import React, {useState, useEffect, createRef} from 'react';
-import {
-  Text,
-  View,
-  StyleSheet,
-  Image
-} from 'react-native';
+import {Text, View, StyleSheet, Image} from 'react-native';
 
 import Icon from 'react-native-vector-icons/FontAwesome5';
 import Toast from 'react-native-toast-message';
@@ -91,23 +86,33 @@ const SignInScreen = props => {
             </View>
             <View style={styles.formInput}>
               <Text style={styles.inputTitle}>Username</Text>
-              <CustomTextInput
-                value={username}
-                placeholder="Enter your username"
-                onChangeText={text => {
-                  setUsername(text);
-                }}
-                maxLength={30}
-                error={nameError}
-                onSubmitEditing={() => passwordInputRef.current.focus()}
-                blurOnSubmit={false}
-              />
+              <View style={styles.inputWithIcon}>
+                <View style={[styles.iconInInput, styles.iconLeft]}>
+                  <Icon name="user-alt" style={styles.iconInput} />
+                </View>
+                <CustomTextInput
+                  style={{paddingLeft: 38}}
+                  value={username}
+                  placeholder="Enter your username"
+                  onChangeText={text => {
+                    setUsername(text);
+                  }}
+                  maxLength={30}
+                  error={nameError}
+                  onSubmitEditing={() => passwordInputRef.current.focus()}
+                  blurOnSubmit={false}
+                />
+              </View>
               {!!nameError && <Text style={styles.error}>{nameError}</Text>}
             </View>
             <View style={styles.formInput}>
               <Text style={styles.inputTitle}>Password</Text>
-              <View style={styles.passwordInput}>
+              <View style={styles.inputWithIcon}>
+                <View style={[styles.iconInInput, styles.iconLeft]}>
+                  <Icon name="lock" style={styles.iconInput} />
+                </View>
                 <CustomTextInput
+                  style={{paddingLeft: 38, paddingRight: 40}}
                   value={password}
                   placeholder="Enter your username"
                   secureTextEntry={passHidden}
@@ -118,16 +123,11 @@ const SignInScreen = props => {
                   maxLength={40}
                   error={passError}
                 />
-                <View style={styles.iconInInput}>
+                <View style={[styles.iconInInput, styles.iconRight]}>
                   <Icon
                     onPress={() => setPassHidden(!passHidden)}
                     name={passHidden ? 'eye' : 'eye-slash'}
-                    style={styles.icon}
-                    color={
-                      passHidden
-                        ? 'rgba(49, 198, 232, 1)'
-                        : 'rgba(49, 198, 232, 1)'
-                    }
+                    style={styles.iconInputTogglePass}
                   />
                 </View>
               </View>
@@ -201,18 +201,30 @@ const styles = StyleSheet.create({
   formButton: {
     marginBottom: 15,
   },
-  passwordInput: {
+  inputWithIcon: {
     position: 'relative',
-  },
-  icon: {
-    fontSize: 18,
   },
   iconInInput: {
     position: 'absolute',
+    justifyContent: 'center',
+  },
+  iconLeft: {
+    top: 0,
+    left: 8,
+    bottom: 0,
+  },
+  iconRight: {
     top: 0,
     right: 8,
     bottom: 0,
-    justifyContent: 'center',
+  },
+  iconInput: {
+    fontSize: 22,
+    color: 'rgba(49, 198, 232, 0.8)',
+  },
+  iconInputTogglePass: {
+    fontSize: 18,
+    color: 'rgba(0, 0, 0, 0.3)',
   },
   error: {
     fontSize: 14,
