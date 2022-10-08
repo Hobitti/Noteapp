@@ -1,5 +1,5 @@
-import React, {useState} from 'react';
-import {Text, View, TextInput, StyleSheet, Image} from 'react-native';
+import React, {useState, createRef} from 'react';
+import {Text, View, StyleSheet, Image} from 'react-native';
 import CustomButton from './CustomButton';
 import CustomTextInput from './CustomTextInput';
 import Icon from 'react-native-vector-icons/FontAwesome5';
@@ -14,6 +14,9 @@ const SignInScreen = props => {
   const [nameError, setNameError] = useState('');
   const [passError, setPassError] = useState('');
   const [passConfError, setPassConfError] = useState('');
+
+  let passwordInputRef = createRef();
+  let passwordInputConfRef = createRef();
 
   const checkRegistration = async () => {
     let hasError = false;
@@ -106,6 +109,8 @@ const SignInScreen = props => {
               }}
               maxLength={30}
               error={nameError}
+              onSubmitEditing={() => passwordInputRef.current.focus()}
+              blurOnSubmit={false}
             />
             {!!nameError && <Text style={styles.error}>{nameError}</Text>}
           </View>
@@ -122,6 +127,9 @@ const SignInScreen = props => {
                 }}
                 maxLength={40}
                 error={passError}
+                ref={passwordInputRef}
+                onSubmitEditing={() => passwordInputConfRef.current.focus()}
+                blurOnSubmit={false}
               />
               <View style={styles.iconInInput}>
                 <Icon
@@ -151,6 +159,7 @@ const SignInScreen = props => {
                 }}
                 maxLength={40}
                 error={passConfError}
+                ref={passwordInputConfRef}
               />
               <View style={styles.iconInInput}>
                 <Icon
