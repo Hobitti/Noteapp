@@ -5,15 +5,12 @@ import CustomButton from './CustomButton';
 import CustomTextInput from './CustomTextInput';
 import KeyboardAvoidingInputs from './KeyboardAvoidingInputs';
 
-import Icon from 'react-native-vector-icons/FontAwesome5';
 import Toast from 'react-native-toast-message';
 
 const SignInScreen = props => {
   const [username, setUsername] = useState('');
   const [password, setPassword] = useState('');
   const [passwordConf, setPasswordConf] = useState('');
-  const [passHidden, setPassHidden] = useState(true);
-  const [passConfHidden, setPassConfHidden] = useState(true);
   const [nameError, setNameError] = useState('');
   const [passError, setPassError] = useState('');
   const [passConfError, setPassConfError] = useState('');
@@ -103,91 +100,55 @@ const SignInScreen = props => {
             </View>
             <View style={styles.formInput}>
               <Text style={styles.inputTitle}>Username</Text>
-              <View style={styles.inputWithIcon}>
-                <View style={[styles.iconInInput, styles.iconLeft]}>
-                  <Icon name="user-alt" style={styles.iconInput} />
-                </View>
-                <CustomTextInput
-                  style={{paddingLeft: 38}}
-                  value={username}
-                  placeholder="Enter username"
-                  onChangeText={text => {
-                    setUsername(text);
-                  }}
-                  maxLength={30}
-                  error={nameError}
-                  onSubmitEditing={() => passwordInputRef.current.focus()}
-                  blurOnSubmit={false}
-                />
-              </View>
+              <CustomTextInput
+                renderIcon="user-alt"
+                style={{paddingLeft: 38}}
+                value={username}
+                placeholder="Enter username"
+                onChangeText={text => {
+                  setUsername(text);
+                }}
+                maxLength={30}
+                error={nameError}
+                onSubmitEditing={() => passwordInputRef.current.focus()}
+                blurOnSubmit={false}
+              />
               {!!nameError && <Text style={styles.error}>{nameError}</Text>}
             </View>
             <View style={styles.formInput}>
               <Text style={styles.inputTitle}>Password</Text>
-              <View style={styles.inputWithIcon}>
-                <View style={[styles.iconInInput, styles.iconLeft]}>
-                  <Icon name="lock" style={styles.iconInput} />
-                </View>
-                <CustomTextInput
-                  style={{paddingLeft: 38, paddingRight: 40}}
-                  value={password}
-                  placeholder="Enter password"
-                  secureTextEntry={passHidden}
-                  onChangeText={text => {
-                    setPassword(text);
-                  }}
-                  maxLength={40}
-                  error={passError}
-                  ref={passwordInputRef}
-                  onSubmitEditing={() => passwordInputConfRef.current.focus()}
-                  blurOnSubmit={false}
-                />
-                <View style={[styles.iconInInput, styles.iconRight]}>
-                  <Icon
-                    onPress={() => setPassHidden(!passHidden)}
-                    name={passHidden ? 'eye' : 'eye-slash'}
-                    style={styles.iconInputTogglePass}
-                    color={
-                      passHidden
-                        ? 'rgba(49, 198, 232, 1)'
-                        : 'rgba(49, 198, 232, 1)'
-                    }
-                  />
-                </View>
-              </View>
+              <CustomTextInput
+                renderIcon="lock"
+                style={{paddingLeft: 38, paddingRight: 40}}
+                value={password}
+                placeholder="Enter password"
+                isPassword={true}
+                onChangeText={text => {
+                  setPassword(text);
+                }}
+                maxLength={40}
+                error={passError}
+                ref={passwordInputRef}
+                onSubmitEditing={() => passwordInputConfRef.current.focus()}
+                blurOnSubmit={false}
+              />
               {!!passError && <Text style={styles.error}>{passError}</Text>}
             </View>
             <View style={styles.formInput}>
               <Text style={styles.inputTitle}>Confirm password</Text>
-              <View style={styles.inputWithIcon}>
-                <View style={[styles.iconInInput, styles.iconLeft]}>
-                  <Icon name="lock" style={styles.iconInput} />
-                </View>
-                <CustomTextInput
-                  style={{paddingLeft: 38, paddingRight: 40}}
-                  value={passwordConf}
-                  placeholder="Enter password again"
-                  secureTextEntry={passConfHidden}
-                  onChangeText={text => {
-                    setPasswordConf(text);
-                  }}
-                  maxLength={40}
-                  error={passConfError}
-                  ref={passwordInputConfRef}
-                />
-                <View style={[styles.iconInInput, styles.iconRight]}>
-                  <Icon
-                    onPress={() => setPassConfHidden(!passConfHidden)}
-                    name={passConfHidden ? 'eye' : 'eye-slash'}
-                    style={styles.iconInputTogglePass}
-                    color={
-                      passConfHidden
-                        ? 'rgba(49, 198, 232, 1)'
-                        : 'rgba(49, 198, 232, 1)'
-                    }
-                  />
-                </View>
-              </View>
+              <CustomTextInput
+                renderIcon="lock"
+                style={{paddingLeft: 38, paddingRight: 40}}
+                value={passwordConf}
+                placeholder="Enter password again"
+                isPassword={true}
+                onChangeText={text => {
+                  setPasswordConf(text);
+                }}
+                maxLength={40}
+                error={passConfError}
+                ref={passwordInputConfRef}
+              />
               {!!passConfError && (
                 <Text style={styles.error}>{passConfError}</Text>
               )}
@@ -259,31 +220,6 @@ const styles = StyleSheet.create({
   },
   formButton: {
     marginBottom: 15,
-  },
-  inputWithIcon: {
-    position: 'relative',
-  },
-  iconInInput: {
-    position: 'absolute',
-    justifyContent: 'center',
-  },
-  iconLeft: {
-    top: 0,
-    left: 8,
-    bottom: 0,
-  },
-  iconRight: {
-    top: 0,
-    right: 8,
-    bottom: 0,
-  },
-  iconInput: {
-    fontSize: 22,
-    color: 'rgba(49, 198, 232, 0.8)',
-  },
-  iconInputTogglePass: {
-    fontSize: 18,
-    color: 'rgba(0, 0, 0, 0.3)',
   },
   error: {
     fontSize: 14,

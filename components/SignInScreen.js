@@ -1,7 +1,6 @@
 import React, {useState, useEffect, createRef} from 'react';
 import {Text, View, StyleSheet, Image} from 'react-native';
 
-import Icon from 'react-native-vector-icons/FontAwesome5';
 import Toast from 'react-native-toast-message';
 
 import CustomButton from './CustomButton';
@@ -11,7 +10,6 @@ import KeyboardAvoidingInputs from './KeyboardAvoidingInputs';
 const SignInScreen = props => {
   const [username, setUsername] = useState('');
   const [password, setPassword] = useState('');
-  const [passHidden, setPassHidden] = useState(true);
   const [nameError, setNameError] = useState('');
   const [passError, setPassError] = useState('');
 
@@ -20,7 +18,6 @@ const SignInScreen = props => {
   const clearInputsAndErrors = () => {
     setUsername('');
     setPassword('');
-    setPassHidden(true);
     setNameError('');
     setPassError('');
   };
@@ -86,51 +83,36 @@ const SignInScreen = props => {
             </View>
             <View style={styles.formInput}>
               <Text style={styles.inputTitle}>Username</Text>
-              <View style={styles.inputWithIcon}>
-                <View style={[styles.iconInInput, styles.iconLeft]}>
-                  <Icon name="user-alt" style={styles.iconInput} />
-                </View>
-                <CustomTextInput
-                  style={{paddingLeft: 38}}
-                  value={username}
-                  placeholder="Enter your username"
-                  onChangeText={text => {
-                    setUsername(text);
-                  }}
-                  maxLength={30}
-                  error={nameError}
-                  onSubmitEditing={() => passwordInputRef.current.focus()}
-                  blurOnSubmit={false}
-                />
-              </View>
+              <CustomTextInput
+                renderIcon="user-alt"
+                style={{paddingLeft: 38}}
+                value={username}
+                placeholder="Enter your username"
+                onChangeText={text => {
+                  setUsername(text);
+                }}
+                maxLength={30}
+                error={nameError}
+                onSubmitEditing={() => passwordInputRef.current.focus()}
+                blurOnSubmit={false}
+              />
               {!!nameError && <Text style={styles.error}>{nameError}</Text>}
             </View>
             <View style={styles.formInput}>
               <Text style={styles.inputTitle}>Password</Text>
-              <View style={styles.inputWithIcon}>
-                <View style={[styles.iconInInput, styles.iconLeft]}>
-                  <Icon name="lock" style={styles.iconInput} />
-                </View>
-                <CustomTextInput
-                  style={{paddingLeft: 38, paddingRight: 40}}
-                  value={password}
-                  placeholder="Enter your username"
-                  secureTextEntry={passHidden}
-                  onChangeText={text => {
-                    setPassword(text);
-                  }}
-                  ref={passwordInputRef}
-                  maxLength={40}
-                  error={passError}
-                />
-                <View style={[styles.iconInInput, styles.iconRight]}>
-                  <Icon
-                    onPress={() => setPassHidden(!passHidden)}
-                    name={passHidden ? 'eye' : 'eye-slash'}
-                    style={styles.iconInputTogglePass}
-                  />
-                </View>
-              </View>
+              <CustomTextInput
+                renderIcon="lock"
+                style={{paddingLeft: 38, paddingRight: 40}}
+                value={password}
+                placeholder="Enter your username"
+                isPassword={true}
+                onChangeText={text => {
+                  setPassword(text);
+                }}
+                ref={passwordInputRef}
+                maxLength={40}
+                error={passError}
+              />
               {!!passError && <Text style={styles.error}>{passError}</Text>}
             </View>
             <View style={styles.formButtons}>
@@ -200,31 +182,6 @@ const styles = StyleSheet.create({
   },
   formButton: {
     marginBottom: 15,
-  },
-  inputWithIcon: {
-    position: 'relative',
-  },
-  iconInInput: {
-    position: 'absolute',
-    justifyContent: 'center',
-  },
-  iconLeft: {
-    top: 0,
-    left: 8,
-    bottom: 0,
-  },
-  iconRight: {
-    top: 0,
-    right: 8,
-    bottom: 0,
-  },
-  iconInput: {
-    fontSize: 22,
-    color: 'rgba(49, 198, 232, 0.8)',
-  },
-  iconInputTogglePass: {
-    fontSize: 18,
-    color: 'rgba(0, 0, 0, 0.3)',
   },
   error: {
     fontSize: 14,
