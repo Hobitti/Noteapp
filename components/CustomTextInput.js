@@ -4,7 +4,7 @@ import {TextInput, StyleSheet, View, Text} from 'react-native';
 import Icon from 'react-native-vector-icons/FontAwesome5';
 
 // Reference forwading for automatic focus of next input onSubmitEditing
-// The reference has to be forwarder, because custom components don't use refs on default
+// The reference has to be forwarded, because custom components don't or can't use refs on default
 const CustomTextInput = forwardRef((props, ref) => {
   const [isFocused, setIsFocused] = useState(false);
   const [icon, setIcon] = useState('');
@@ -41,7 +41,7 @@ const CustomTextInput = forwardRef((props, ref) => {
         onBlur={() => setIsFocused(false)}
         onFocus={() => setIsFocused(true)}
         ref={ref}
-        secureTextEntry={passHidden}
+        secureTextEntry={isPassword ? passHidden : false}
       />
       {isPassword && (
         <View style={[styles.iconInInput, styles.iconRight]}>
