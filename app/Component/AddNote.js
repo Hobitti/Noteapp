@@ -4,7 +4,7 @@ import CheckBox from '@react-native-community/checkbox';
 import moment from 'moment';
 import {StyleSheet, Text, View, TextInput, Button, TouchableOpacity } from 'react-native';
 
-const App = () => {
+const AddNote = (userID) => {
   const [inputName, setNameNote,]=useState();
   const [inputText, setTextNote,]=useState();
   const [isSelected, setToggleCheckBox] = useState(false)
@@ -32,7 +32,7 @@ const App = () => {
     newnote.content=inputText
     newnote.notePublic=isSelected;
     newnote.date=moment().format("yyyy-MM-DD h:mm:ss");     
-    newnote.userID=1;
+    newnote.userID=userID;
     console.log(newnote);
 
   }
@@ -95,15 +95,15 @@ const App = () => {
               <TextInput style={styles.textInput} placeholder="Name" onChangeText={(text)=>(noteNameInputHandler(text))} />
               <TextInput style={styles.textInputLong} placeholder="Note" onChangeText={(text)=>(noteTextInputHandler(text))} multiline={true}/>
               <View style={styles.checkboxContainer}>
+              <Text style={styles.inputTitle}>Public?
               <CheckBox
                 disabled={false}
                 value={isSelected}
                 onValueChange={(newValue) => setToggleCheckBox(newValue)}
-              />
+              /></Text>
               </View>
-            
               <View style={styles.formButtons}>
-                <View style={styles.formButton}>
+                <View style={styles.formButton}> 
                   <AppButton   title='Add Note'  type="main" onPress={postNote} />
                 </View>
               </View>
@@ -161,6 +161,7 @@ const styles = StyleSheet.create({
     paddingLeft: 10,
     fontFamily: 'RobotoCondensed-Regular',
     fontSize: 14,
+    marginBottom: 15,
   },
   textInputLong: {
     borderColor: 'rgba(49, 198, 232, 0.5)',
@@ -170,6 +171,7 @@ const styles = StyleSheet.create({
     fontFamily: 'RobotoCondensed-Regular',
     fontSize: 14,
     height: 150,
+    marginBottom: 15,
   },
   formButtons: {
     marginTop: 20,

@@ -4,7 +4,7 @@ import CheckBox from '@react-native-community/checkbox';
 import moment from 'moment';
 import {StyleSheet, Text, View, TextInput, Button, TouchableOpacity } from 'react-native';
 
-const ModifyNote = (userID,noteID) => {
+const ShowNote = (userID,noteID) => {
   const [inputName, setNameNote,]=useState();
   const [inputText, setTextNote,]=useState();
   const [oldnote, setOldNote,]=useState({});
@@ -68,27 +68,6 @@ const ModifyNote = (userID,noteID) => {
       console.log(error);
     }
   }
-  
-
-  const updateNote=async()=>{
-    try{
-      addFishToList();
-      let response=await fetch("http://10.0.2.2:8080/rest/noteappservice/editnote",
-      {
-        method:'PUT',
-        headers:{
-          'Content-Type':'application/json'
-        },
-        body:JSON.stringify(newnote) 
-      });
-      let json=await response.text();
-      console.log(json);
-    }
-    catch(error){
-      console.log(error);
-    }
-  }
- 
   useEffect(() => {
     getNote();
   }, []);
@@ -99,8 +78,8 @@ const ModifyNote = (userID,noteID) => {
           <View style={styles.formTitle}>
             <Text style={styles.header}>Add note</Text>
            </View>
-          <TextInput style={styles.textInput} defaultValue={oldnote.title} onChangeText={(text)=>(noteNameInputHandler(text))} />
-          <TextInput style={styles.textInputLong} defaultValue={oldnote.content} onChangeText={(text)=>(noteTextInputHandler(text))} multiline={true}/>
+          <Text style={styles.textInput}>{oldnote.title} </Text>
+          <Text style={styles.textInputLong}> {oldnote.content} </Text>
           <View style={styles.checkboxContainer}>
           <Text style={styles.inputTitle}>Public?
           <CheckBox
@@ -111,7 +90,7 @@ const ModifyNote = (userID,noteID) => {
           </View>
           <View style={styles.formButtons}>
             <View style={styles.formButton}> 
-              <AppButton   title='Add Note'  type="main" onPress={updateNote} />
+              <AppButton   title='Add Note'  type="main"  />
             </View>
           </View>
         </View>
