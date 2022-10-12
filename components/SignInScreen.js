@@ -1,3 +1,4 @@
+import { NavigationContainer } from '@react-navigation/native';
 import React, {useState, useEffect, createRef} from 'react';
 import {Text, View, StyleSheet, Image} from 'react-native';
 
@@ -59,6 +60,7 @@ const SignInScreen = props => {
           text1: 'Login succesful',
           text2: 'Welcome ' + json.username + '!',
         });
+        props.navigation.navigate('ListNotes', {userID: json.userID});
       }
     } catch (error) {
       console.log(error);
@@ -95,6 +97,7 @@ const SignInScreen = props => {
                 error={nameError}
                 onSubmitEditing={() => passwordInputRef.current.focus()}
                 blurOnSubmit={false}
+                isPassword={false}
               />
               {!!nameError && <Text style={styles.error}>{nameError}</Text>}
             </View>

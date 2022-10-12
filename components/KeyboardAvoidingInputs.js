@@ -6,7 +6,7 @@ import {
   Keyboard,
 } from 'react-native';
 
-// Clears input above the keyboard
+// Moves input above the keyboard
 // While keyboard is open and something is pushed above it
 // the view becomes scrollable
 // Dismisses keyboard when the screen is clicked
