@@ -8,6 +8,11 @@ import Toast, {BaseToast, ErrorToast} from 'react-native-toast-message';
 
 import SignUpScreen from './components/SignUpScreen';
 import SignInScreen from './components/SignInScreen';
+import ShowNote from './components/ShowNote';
+import AddNote from './components/AddNote';
+import Modify from './components/Modify';
+import ListNotes from './components/ListNotes';
+import ShareNote from './components/ShareNote';
 
 // Customized toasts
 const toastConfig = {
@@ -71,6 +76,31 @@ const App = () => {
           <Stack.Screen
             name="SignUpScreen"
             component={SignUpScreen}
+            options={{headerShown: false}}
+          />
+          <Stack.Screen
+            name="AddNote"
+            component={AddNote}
+            options={{headerShown: false}}
+          />
+          <Stack.Screen
+            name="ModifyNote"
+            component={Modify}
+            options={{headerShown: false}}
+          />
+          <Stack.Screen
+            name="ShowNote"
+            component={ShowNote}
+            options={{headerShown: false}}
+          />
+          <Stack.Screen
+            name="ListNotes"
+            component={ListNotes}
+            options={{headerShown: false}}
+          />
+          <Stack.Screen
+            name="ShareNote"
+            component={ShareNote}
             options={{headerShown: false}}
           />
         </Stack.Navigator>
