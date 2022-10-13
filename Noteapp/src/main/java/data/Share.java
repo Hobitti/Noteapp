@@ -39,5 +39,4 @@ public class Share {
 		this.noteID = noteID;
 	}
 	
-	
 }

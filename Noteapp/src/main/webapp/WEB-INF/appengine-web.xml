@@ -6,10 +6,15 @@
   <runtime>java8</runtime>
 
   <system-properties>
-    <property name="java.util.logging.config.file" value="WEB-INF/logging.properties"/>
-	<property name="drivername" value="com.mysql.jdbc.Driver"/>
-    <property name="username" value="root"/>
-    <property name="password" value="root"/>
+	<property name="java.util.logging.config.file" value="WEB-INF/logging.properties"/>
+	<property name="drivername" value="com.mysql.cj.jdbc.Driver"/>
+    <property name="googleusername" value="workhorse"/>
+    <property name="googlepassword" value="workhorse"/>
+    <property name="googledatabasename" value="noteappi"/>
+    <property name="socketfactory" value="com.google.cloud.sql.mysql.SocketFactory"/>
+    <property name="cloudsqlinstance" value="bold-oasis-361607:europe-north1:fishlistsql"/>
+    <property name="usessl" value="false"/>
+    
     <property name="localusername" value="workhorse"/>
     <property name="localpassword" value="workhorse"/>
     <property name="databasename" value="noteapp"/>

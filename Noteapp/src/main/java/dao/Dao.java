@@ -12,7 +12,8 @@ import conn.Connections;
 
 public class Dao {
 	
-	public static boolean checkUserLogin(String username, String password) {
+	public static User checkUserLogin(String username, String password) {
+		User user = new User();
 		Connection conn = null;
 		
 		try {
@@ -20,25 +21,27 @@ public class Dao {
 		} catch (Exception e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
-			return false;
+			return user;
 		}
 		
 		try {
-			String sql = "SELECT userID FROM users WHERE username = ? AND password = ?;";
+			String sql = "SELECT userID, username FROM users WHERE username = ? AND password = ?;";
 			PreparedStatement pstmt = conn.prepareStatement(sql);
 			pstmt.setString(1, username);
 			pstmt.setString(2, password);
 			ResultSet result = pstmt.executeQuery();
 
 			if (result.next()) {
-				return true;
+				user.setUserID(result.getInt(1));
+				user.setUsername(result.getString(2));
+				return user;
 			} else {
-				return false;
+				return user;
 			}
 			
 		} catch (SQLException e) {
 			e.printStackTrace();
-			return false;
+			return user;
 		} finally {
 			try {
 				if (conn != null)

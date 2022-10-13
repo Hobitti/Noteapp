@@ -1,6 +1,9 @@
 package conn;
 
 import java.sql.Connection;
+import java.sql.SQLException;
+import java.util.Properties;
+
 import javax.sql.DataSource;
 import com.zaxxer.hikari.HikariConfig;
 import com.zaxxer.hikari.HikariDataSource;
@@ -8,14 +11,14 @@ import com.zaxxer.hikari.HikariDataSource;
 public class Connections {
 	private static DataSource pool = null;
 
-	/*public static Connection getProductionConnection() throws Exception {
+	public static Connection getProductionConnection() throws Exception {
 		if (pool != null) {
 			return pool.getConnection();
 		}
 		// The configuration object specifies behaviors for the connection pool.
 		HikariConfig config = new HikariConfig();
 		// Configure which instance and what database user to connect with.
-		config.setJdbcUrl(String.format("jdbc:mysql:///%s", "fishdb")); // e.g. hellogoogle1
+		config.setJdbcUrl(String.format("jdbc:mysql:///%s", "noteappi")); // e.g. hellogoogle1
 		config.setUsername(System.getProperty("username")); // e.g. "root", "postgres"
 		config.setPassword(System.getProperty("password")); // e.g. "my-password"
 
@@ -24,7 +27,7 @@ public class Connections {
 		// See https://github.com/GoogleCloudPlatform/cloud-sql-jdbc-socket-factory for
 		// details.
 		config.addDataSourceProperty("socketFactory", "com.google.cloud.sql.mysql.SocketFactory");
-		config.addDataSourceProperty("cloudSqlInstance", "fishlist-287507:europe-west1:fishlistmysql");
+		config.addDataSourceProperty("cloudSqlInstance", "bold-oasis-361607:europe-north1:fishlistsql");
 		config.addDataSourceProperty("useSSL", "false");
 
 		// ... Specify additional connection properties here.
@@ -35,7 +38,7 @@ public class Connections {
 		Connection conn = null;
 		conn = pool.getConnection();
 		return conn;
-	}*/
+	}
 
 	public static Connection getDevConnection() throws Exception {
 		if (pool != null) {

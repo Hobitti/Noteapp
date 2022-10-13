@@ -20,7 +20,7 @@ public class Noteapp {
 	@Path("/checkuserlogin")
 	@Produces(MediaType.APPLICATION_JSON)
 	@Consumes(MediaType.APPLICATION_JSON)
-	public boolean checkUserLogin(User u) {
+	public User checkUserLogin(User u) {
 		return Dao.checkUserLogin(u.getUsername(), u.getPassword());
 	}
 	
@@ -151,4 +151,12 @@ public class Noteapp {
 	public DetailedNote getNoteDetails(Note n) {
 		return Dao.getNoteDetails(n.getNoteID(), n.getUserID());
 	}
+	
+	@POST
+    @Path("/getshare")
+    @Produces(MediaType.APPLICATION_JSON)
+    @Consumes(MediaType.APPLICATION_JSON)
+    public Share getShare(Share s) {
+        return Dao.getShare(s.getDistributorID(), s.getNoteID());
+    }
 }
