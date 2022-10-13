@@ -3,6 +3,7 @@ import CheckBox from '@react-native-community/checkbox';
 import moment from 'moment';
 import {StyleSheet, Text, View, TextInput} from 'react-native';
 import CustomButton from './CustomButton';
+import Toast from 'react-native-toast-message';
 
 const AddNote = props => {
   const [inputName, setNameNote] = useState();
@@ -60,8 +61,27 @@ const AddNote = props => {
       );
       let json = await response.json();
       console.log(json);
+      if (json) {
+        Toast.show({
+          type: 'success',
+          text1: 'Add succesful',
+          text2: 'You will be redirected to notes',
+        });
+        props.navigation.navigate('ListNotes', {userID: props.route.params.userID, modified: true});
+      } else {
+        Toast.show({
+          type: 'error',
+          text1: 'Add failed',
+          text2: 'Something went wrong. Try again later',
+        });
+      }
     } catch (error) {
       console.log(error);
+      Toast.show({
+        type: 'error',
+        text1: 'Add failed',
+        text2: 'Server error. Try again later',
+      });
     }
   };
 

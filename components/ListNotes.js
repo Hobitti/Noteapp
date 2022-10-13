@@ -25,7 +25,7 @@ const ListNotes = props => {
   const renderText = item => {
     return (
       <View style={styles.noteListItem}>
-        <NoteListItem item={item}>
+        <NoteListItem item={item} navigation={props.navigation} noteID={item.item.noteID} userID={item.item.userID} currentUserID={props.route.params.userID}>
           <View style={styles.noteListOpened}>
             <Text style={styles.noteListContent}>{item.item.content}</Text>
             <View style={styles.noteListIcons}>
@@ -109,7 +109,10 @@ const ListNotes = props => {
   useEffect(() => {
     getNotes();
     getPublicNotes();
-  }, []);
+    if(props.route.params?.modified) {
+      props.route.params.modified = false;
+    }
+  }, [props.route.params?.modified]);
 
   return (
     <View style={styles.componentContainer}>

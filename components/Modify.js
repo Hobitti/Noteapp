@@ -99,7 +99,7 @@ const ModifyNote = props => {
           text1: 'Modification succesful',
           text2: 'You will be redirected to notes',
         });
-        props.navigation.navigate('ListNotes', {userID: props.route.params.userID});
+        props.navigation.navigate('ListNotes', {userID: props.route.params.userID, modified: true});
       }
     } catch (error) {
       console.log(error);

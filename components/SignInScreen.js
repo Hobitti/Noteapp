@@ -107,7 +107,7 @@ const SignInScreen = props => {
                 renderIcon="lock"
                 style={{paddingLeft: 38, paddingRight: 40}}
                 value={password}
-                placeholder="Enter your username"
+                placeholder="Enter your password"
                 isPassword={true}
                 onChangeText={text => {
                   setPassword(text);

@@ -3,12 +3,12 @@ import {StyleSheet, Text, View, TouchableOpacity} from 'react-native';
 import Collapsible from 'react-native-collapsible';
 import moment from 'moment';
 
-const NoteListItem = ({children, item}) => {
+const NoteListItem = ({children, item, navigation, noteID, userID, currentUserID}) => {
   const [collapsed, setCollapsed] = useState(true);
 
   return (
     <View>
-      <TouchableOpacity onPress={() => setCollapsed(!collapsed)}>
+      <TouchableOpacity onPress={() => setCollapsed(!collapsed)} onLongPress={() => navigation.navigate("ShowNote", {noteID: noteID, userID: userID, currentUserID: currentUserID})}>
       <View style={styles.noteListItemInfo}>
           <Text style={styles.noteListTitle}>{item.item.title}</Text>
           <Text style={styles.noteListDate}>

@@ -71,7 +71,7 @@ const ShowNote = props => {
       <View style={styles.contentContainer}>
         <View style={styles.form}>
           <View style={styles.formTitle}>
-            <Text style={styles.header}>Add note</Text>
+            <Text style={styles.header}>Show note</Text>
           </View>
           <Text style={styles.textInput}>{oldnote.title} </Text>
           <Text style={styles.textInputLong}> {oldnote.content} </Text>
@@ -89,7 +89,8 @@ const ShowNote = props => {
             <View style={styles.formButton}>
               <CustomButton
                 title="Back to notes"
-                type="main" /*onPress={props.navigation.navigate('')}*/
+                type="main"
+                onPress={() => props.navigation.navigate('ListNotes', {userID: props.route.params.currentUserID})}
               />
             </View>
           </View>

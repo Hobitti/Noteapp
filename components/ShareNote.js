@@ -1,10 +1,10 @@
 import React, {useState} from 'react';
 import {StyleSheet, Text, View, TextInput, Button, TouchableOpacity } from 'react-native';
 
+import Toast from 'react-native-toast-message';
+
 const ShareNote = props => {
-  const [inputReceiverID, setReceiverNote,]=useState();
-  const [list, addShareID]=useState();
-  const [shareData, setShareData]=useState();
+  const [inputReceiverID, setReceiverNote]=useState();
   class sharingNote {
     constructor(noteID, distributorID) {
       this.noteID = noteID;
@@ -14,10 +14,6 @@ const ShareNote = props => {
 
   const sharenote=new sharingNote("","")
 
-  function setShareID(list) {
-    addShareID(list.shareID);
-  }
-
   const noteReceiverInputHandler=(input)=>{
     setReceiverNote(input)
   }
@@ -25,7 +21,7 @@ const ShareNote = props => {
   const addDataToList=()=>{
     sharenote.noteID=props.route.params.noteID;
     sharenote.distributorID=props.route.params.userID;
-    console.log(sharenote)
+    console.log("AddDataToList" + sharenote.noteID)
   }
   const AppButton = ({onPress, title, type}) => (
     <TouchableOpacity
@@ -46,31 +42,8 @@ const ShareNote = props => {
     </TouchableOpacity>
   );
 
-
-
-  const getShare = async () => {
-    try {
-      addDataToList();
-      let response = await fetch(
-        'http://10.0.2.2:8080/rest/noteappservice/getshare',
-        {
-          method: 'POST',
-          headers: {
-            'Content-Type': 'application/json',
-          },
-          body: JSON.stringify({distributorID: sharenote.distributorID, noteID: sharenote.noteID/*distributorID: '2', noteID: '2'*/}),
-        },
-      );
-
-      let json = await response.json();
-      console.log("getShare: "+json);
-      setShareID(json);
-    } catch (error) {
-      console.log(error);
-    }
-  };
   //         Share note to user
-  const shareNoteToUser = async () => {
+  const shareNoteToUser = async (shareID) => {
     try {
       addDataToList();
       let response = await fetch(
@@ -80,16 +53,34 @@ const ShareNote = props => {
           headers: {
             'Content-Type': 'application/json',
           },
-          body: JSON.stringify({shareID: list, userID: inputReceiverID}),
+          body: JSON.stringify({shareID: shareID, userID: inputReceiverID}),
         },
       );
 
-      console.log("list.shareid: "+list)
       console.log("list.inputreceiverid: "+inputReceiverID)
       let json = await response.json();
+      if (json) {
+        Toast.show({
+          type: 'success',
+          text1: 'Share succesful',
+          text2: 'You will be redirected to notes',
+        });
+        props.navigation.navigate('ListNotes', {userID: props.route.params.userID, modified: true});
+      } else {
+        Toast.show({
+          type: 'error',
+          text1: 'Share failed',
+          text2: 'Something went wrong. Try again later',
+        });
+      }
       //setShare(json);
     } catch (error) {
       console.log(error);
+      Toast.show({
+        type: 'error',
+        text1: 'Add failed',
+        text2: 'Server error. Try again later',
+      });
     }
   };
 
@@ -109,16 +100,15 @@ const ShareNote = props => {
       );
 
       let json = await response.json();
+      console.log("ShareID from sharenote: ");
+      console.log(json.shareID);
       console.log("sharenote receiverid: "+inputReceiverID);
-      getShare();
-      shareNoteToUser(); //Liikuta tää muualle
+
+      shareNoteToUser(json.shareID);
     } catch (error) {
       console.log(error);
     }
   };
-
-
-
 
   return (
         <View style={styles.mainContainer}>
@@ -129,7 +119,7 @@ const ShareNote = props => {
                </View>
               {/* <TextInput style={styles.textInput} placeholder="Note ID" onChangeText={(text)=>(noteNameInputHandler(text))} />
               <TextInput style={styles.textInput} placeholder="User ID" onChangeText={(text)=>(noteTextInputHandler(text))} /> */}
-              <TextInput style={styles.textInput} placeholder="Receiver ID" onChangeText={(text)=>(noteReceiverInputHandler(text))} />
+              <TextInput style={styles.textInput} placeholder="Receiver ID" onChangeText={text => noteReceiverInputHandler(text)} />
               <View style={styles.checkboxContainer}>
               </View>
               <View style={styles.formButtons}>
