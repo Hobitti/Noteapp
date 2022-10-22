@@ -1,4 +1,3 @@
-import { NavigationContainer } from '@react-navigation/native';
 import React, {useState, useEffect, createRef} from 'react';
 import {Text, View, StyleSheet, Image} from 'react-native';
 
