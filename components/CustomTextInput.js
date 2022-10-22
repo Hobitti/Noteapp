@@ -1,5 +1,5 @@
 import React, {useState, forwardRef, useEffect} from 'react';
-import {TextInput, StyleSheet, View, Text} from 'react-native';
+import {TextInput, StyleSheet, View} from 'react-native';
 
 import Icon from 'react-native-vector-icons/FontAwesome5';
 
