@@ -4,8 +4,9 @@ import {StyleSheet, Text, View, FlatList} from 'react-native';
 import Icon from 'react-native-vector-icons/FontAwesome5';
 import NoteListItem from './NoteListItem';
 
+import Toast from 'react-native-toast-message';
+
 const ListNotes = props => {
-  const [newText, setText] = useState();
   const [list, addText] = useState();
 
   const [publicList, addPublicText] = useState();
@@ -47,7 +48,7 @@ const ListNotes = props => {
               {!item.item.notePublic &&
                 item.item.userID == props.route.params.userID && (
                   <Icon
-                    style={styles.noteListIcon}
+                    style={[styles.noteListIcon, {paddingLeft: 3}]}
                     name="share"
                     onPress={() =>
                       props.navigation.navigate('ShareNote', {
@@ -57,6 +58,15 @@ const ListNotes = props => {
                     }
                   />
                 )}
+                {item.item.userID == props.route.params.userID && (
+                <Icon
+                  style={[styles.noteListIcon, {paddingLeft: 3}]}
+                  name="trash-alt"
+                  onPress={() =>
+                    deleteNote(item.item.noteID)
+                  }
+                />
+              )}
             </View>
           </View>
         </NoteListItem>
@@ -105,6 +115,46 @@ const ListNotes = props => {
       console.log(error);
     }
   };
+
+  const deleteNote = async(noteID) => {
+    try {
+      let response = await fetch(
+        'http://10.0.2.2:8080/rest/noteappservice/removenote',
+        {
+          method: 'DELETE',
+          headers: {
+            'Content-Type': 'application/json',
+          },
+          body: JSON.stringify({noteID: noteID, userID: props.route.params.userID}),
+        },
+      );
+
+      let json = await response.json();
+      console.log(json);
+
+      if(json) {
+        addText(currentList => currentList.filter(list => {return list.noteID !== noteID}))
+        Toast.show({
+          type: 'success',
+          text1: 'Note deleted',
+          text2: 'The note was deleted',
+        });
+      } else {
+        Toast.show({
+          type: 'error',
+          text1: 'Deletion failed',
+          text2: 'Something went wrong. Try again later',
+        });
+      }
+    } catch (error) {
+      console.log(error);
+      Toast.show({
+        type: 'error',
+        text1: 'Add failed',
+        text2: 'Server error. Try again later',
+      });
+    }
+  }
 
   useEffect(() => {
     getNotes();
